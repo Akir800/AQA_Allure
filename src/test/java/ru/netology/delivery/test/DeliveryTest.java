@@ -2,10 +2,13 @@ package ru.netology.delivery.test;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import org.junit.jupiter.api.AfterEach;
+import com.codeborne.selenide.logevents.SelenideLogger;
+import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterAll;
 import org.openqa.selenium.Keys;
 import ru.netology.delivery.data.DataGenerator;
 
@@ -15,10 +18,12 @@ import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
-import static java.time.zone.ZoneRulesProvider.refresh;
 
 class DeliveryTest {
-
+    @BeforeAll
+    static void setUpAll() {
+        SelenideLogger.addListener("allure", new AllureSelenide());
+    }
     @BeforeEach
     void setup() {
         open("http://localhost:9999");
@@ -240,5 +245,10 @@ class DeliveryTest {
 
         $("[data-test-id='name'] [class='input__sub']").shouldHave(exactText("Имя и Фамилия указаные" +
                 " неверно. Допустимы только русские буквы, пробелы и дефисы."));
+    }
+
+    @AfterAll
+    static void tearDownAll() {
+        SelenideLogger.removeListener("allure");
     }
 }
